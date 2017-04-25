@@ -126,6 +126,7 @@ set (sm_material
 	intmatbilinczjansson.C
     intmatbilinearcz.C
 	intmatbilinczelastic.C
+	umicore.C
     )
 
 set (sm_error
