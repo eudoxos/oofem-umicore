@@ -406,12 +406,12 @@ if (USE_SPOOLES)
 endif ()
 
 # We need the interpreter for the test suite.
-find_package(PythonInterp "2.7")
+find_package(PythonInterp "3.2")
 
 if (USE_PYTHON_BINDINGS OR USE_PYTHON)
     # PythonLibs in cmake is bugged, have to try and rely on PythonInterp to get the suitable major and minor versions.
     set (CMAKE_LIBRARY_DIR ${PYTHON_DIR})
-    find_package(PythonInterp "2.7" REQUIRED)
+    find_package(PythonInterp "3.5" REQUIRED)
     find_package(PythonLibs "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}" REQUIRED)
     include_directories (${PYTHON_INCLUDE_DIRS})
     list (APPEND EXT_LIBS ${PYTHON_LIBRARIES})
@@ -426,6 +426,8 @@ if (USE_PYTHON_BINDINGS OR USE_PYTHON)
     endif ()
 endif ()
 
+
+add_definitions( -DPyString_FromString=PyUnicode_FromString )
 
 #######################################################################
 ######################## Configuration ################################
