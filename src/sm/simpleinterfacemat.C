@@ -122,14 +122,14 @@ SimpleInterfaceMaterial :: giveRealStressVector(FloatArray &answer, GaussPoint *
     case _2dInterface:
         answer.resize(2);
         shearStrain.at(1) = strainVector.at(2);
-        shearStress.beScaled(this->kn, shearStrain);
+        shearStress.beScaled(this->ks, shearStrain);
         shearStress.subtract(tempShearStressShift);
         dp = shearStress.dotProduct(shearStress, 1);
         if ( dp > maxShearStress * maxShearStress ) {
             shearStress.times( maxShearStress / sqrt(dp) );
         }
 
-        tempShearStressShift.beScaled(this->kn, shearStrain);
+        tempShearStressShift.beScaled(this->ks, shearStrain);
         tempShearStressShift.subtract(shearStress);
         answer.at(2) = shearStress.at(1);
         break;
@@ -138,14 +138,14 @@ SimpleInterfaceMaterial :: giveRealStressVector(FloatArray &answer, GaussPoint *
         answer.resize(3);
         shearStrain.at(1) = strainVector.at(2);
         shearStrain.at(2) = strainVector.at(3);
-        shearStress.beScaled(this->kn, shearStrain);
+        shearStress.beScaled(this->ks, shearStrain);
         shearStress.subtract(tempShearStressShift);
         dp = shearStress.dotProduct(shearStress, 2);
         if ( dp > maxShearStress * maxShearStress ) {
             shearStress.times( maxShearStress / sqrt(dp) );
         }
 
-        tempShearStressShift.beScaled(this->kn, shearStrain);
+        tempShearStressShift.beScaled(this->ks, shearStrain);
         tempShearStressShift.subtract(shearStress);
         answer.at(2) = shearStress.at(1);
         answer.at(3) = shearStress.at(2);
@@ -205,13 +205,16 @@ SimpleInterfaceMaterial :: giveStiffnessMatrix(FloatMatrix &answer,
         answer.resize(2, 2);
         if ( rMode == SecantStiffness || rMode == TangentStiffness ) {
             if ( normalStrain + normalClearance <= 0. ) {
-                answer.at(1, 1) = answer.at(2, 2) = this->kn; //in compression and after the clearance gap closed
+                answer.at(1, 1) = this->kn; //in compression and after the clearance gap closed
+                answer.at(2, 2) = this->ks;
             } else {
-                answer.at(1, 1) = answer.at(2, 2) = this->kn * this->stiffCoeff;
+                answer.at(1, 1) = this->kn * this->stiffCoeff;
+                answer.at(2, 2) = this->ks * this->stiffCoeff;
             }
         } else {
             if ( rMode == ElasticStiffness ) {
-                answer.at(1, 1) = answer.at(2, 2) = this->kn;
+                answer.at(1, 1) = this->kn;
+                answer.at(2, 2) = this->ks;
             } else {
                 _error2( "give2dInterfaceMaterialStiffnessMatrix: unknown MatResponseMode (%s)", __MatResponseModeToString(rMode) );
             }
@@ -223,13 +226,16 @@ SimpleInterfaceMaterial :: giveStiffnessMatrix(FloatMatrix &answer,
         answer.resize(3, 3);
         if ( rMode == SecantStiffness || rMode == TangentStiffness ) {
             if ( normalStrain + normalClearance <= 0. ) {
-                answer.at(1, 1) = answer.at(2, 2) = answer.at(3, 3) = this->kn; //in compression and after the clearance gap closed
+                answer.at(1, 1) = this->kn; //in compression and after the clearance gap closed
+                answer.at(2, 2) = answer.at(3, 3) = this->ks;
             } else {
-                answer.at(1, 1) = answer.at(2, 2) = answer.at(3, 3) = this->kn * this->stiffCoeff;
+                answer.at(1, 1) = this->kn * this->stiffCoeff;
+                answer.at(2, 2) = answer.at(3, 3) = this->ks * this->stiffCoeff;
             }
         } else {
             if ( rMode == ElasticStiffness ) {
-                answer.at(1, 1) = answer.at(2, 2) = answer.at(3, 3) = this->kn;
+                answer.at(1, 1) = this->kn;
+                answer.at(2, 2) = answer.at(3, 3) = this->ks;
             } else {
                 _error2( "give2dInterfaceMaterialStiffnessMatrix: unknown MatResponseMode (%s)", __MatResponseModeToString(rMode) );
             }
@@ -274,10 +280,13 @@ SimpleInterfaceMaterial :: initializeFrom(InputRecord *ir)
     frictCoeff = 0.;
     stiffCoeff = 0.;
     normalClearance = 0.;
+	 ks = -1;
     IR_GIVE_FIELD(ir, kn, _IFT_SimpleInterfaceMaterial_kn);
+    IR_GIVE_OPTIONAL_FIELD(ir, ks, _IFT_SimpleInterfaceMaterial_ks);
     IR_GIVE_OPTIONAL_FIELD(ir, frictCoeff, _IFT_SimpleInterfaceMaterial_frictCoeff);
     IR_GIVE_OPTIONAL_FIELD(ir, stiffCoeff, _IFT_SimpleInterfaceMaterial_stiffCoeff);
     IR_GIVE_OPTIONAL_FIELD(ir, normalClearance, _IFT_SimpleInterfaceMaterial_normalClearance);
+	 if (ks<0) ks = ks;
 
     return StructuralMaterial :: initializeFrom(ir);
 }
@@ -288,6 +297,7 @@ SimpleInterfaceMaterial :: giveInputRecord(DynamicInputRecord &input)
 {
     StructuralMaterial :: giveInputRecord(input);
     input.setField(this->kn, _IFT_SimpleInterfaceMaterial_kn);
+    input.setField(this->ks, _IFT_SimpleInterfaceMaterial_ks);
     input.setField(this->frictCoeff, _IFT_SimpleInterfaceMaterial_frictCoeff);
     input.setField(this->stiffCoeff, _IFT_SimpleInterfaceMaterial_stiffCoeff);
     input.setField(this->normalClearance, _IFT_SimpleInterfaceMaterial_normalClearance);

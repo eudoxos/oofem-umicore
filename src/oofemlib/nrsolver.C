@@ -275,6 +275,7 @@ NRSolver :: solve(SparseMtrx *k, FloatArray *R, FloatArray *R0,
             break;
         } else if ( nite >= nsmax ) {
             OOFEM_LOG_DEBUG("Maximum number of iterations reached\n");
+				OOFEM_ERROR("ASG\n");
             break;
         }
 

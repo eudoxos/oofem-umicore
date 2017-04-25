@@ -367,7 +367,7 @@ void SparseGridMtxLL :: Factorize()
             BlockArith->LL_Decomposition(dd + Djj);
 
             if ( ( bj % newdotcnount ) == 0 ) {
-                Write(".");
+                //Write(".");
             }
 
             Djj += block_storage;
@@ -471,7 +471,7 @@ void SparseGridMtxLL :: Factorize_Incomplete()
             BlockArith->LL_Decomposition(dd + Djj);
 
             if ( ( bj % newdotcnount ) == 0 ) {
-                Write(".");
+                //Write(".");
             }
 
             Djj += block_storage;

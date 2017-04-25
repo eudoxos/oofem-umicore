@@ -246,6 +246,7 @@ InterfaceElem1d :: computeVolumeAround(GaussPoint *gp)
 // Returns the length of the receiver. This method is valid only if 1
 // Gauss point is used.
 {
+	 return this->giveCrossSection()->give(CS_Area,gp);
     return 1.0; //MUST be set to 1.0
 }
 

@@ -133,7 +133,7 @@ ZZNodalRecoveryModel :: recoverValues(InternalStateType type, TimeStep *tStep)
                 rhs.resize(regionDofMans, regionValSize);
                 rhs.zero();
                 if ( regionValSize == 0 ) {
-                    OOFEM_LOG_RELEVANT( "ZZNodalRecoveryModel :: unknown size of InternalStateType %s\n", __InternalStateTypeToString(type) );
+                    //OOFEM_LOG_RELEVANT( "ZZNodalRecoveryModel :: unknown size of InternalStateType %s\n", __InternalStateTypeToString(type) );
                 }
             } else if ( regionValSize != nsig.giveNumberOfColumns() ) {
                 nsig.resize(regionDofMans, regionValSize);

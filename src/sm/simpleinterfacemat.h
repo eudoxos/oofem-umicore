@@ -48,6 +48,7 @@
 //@{
 #define _IFT_SimpleInterfaceMaterial_Name "simpleintermat"
 #define _IFT_SimpleInterfaceMaterial_kn "kn"
+#define _IFT_SimpleInterfaceMaterial_ks "ks"
 #define _IFT_SimpleInterfaceMaterial_knt "knt"
 #define _IFT_SimpleInterfaceMaterial_frictCoeff "fc"
 #define _IFT_SimpleInterfaceMaterial_stiffCoeff "stiffcoeff"
@@ -96,6 +97,7 @@ class SimpleInterfaceMaterial : public StructuralMaterial
 {
 protected:
     double kn;
+    double ks;
     double stiffCoeff;
     double frictCoeff;
     /// Normal distance which needs to be closed when interface element should act in compression (distance is 0 by default).

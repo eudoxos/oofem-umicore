@@ -78,7 +78,7 @@ NumericalMethod *NlDEIDynamic :: giveNumericalMethod(MetaStep *mStep)
 //     - SolutionOfLinearEquations
 
 {
-    //return NULL;  // Not necessary here - Diagonal matrix and simple inversion is used.
+    return NULL;  // Not necessary here - Diagonal matrix and simple inversion is used.
     if ( nMethod ) {
         return nMethod;
     }
@@ -618,7 +618,7 @@ NlDEIDynamic :: computeMassMtrx(FloatArray &massMatrix, double &maxOm, TimeStep 
         for ( j = 1; j <= n; j++ ) {
             jj = loc.at(j);
             if ( ( jj ) && ( charMtrx.at(j, j) <= maxElmass * ZERO_REL_MASS ) ) {
-                charMtrx.at(j, j) = charMtrx2.at(j, j) / maxOmEl;
+					if (maxOmEl > 0.) charMtrx.at(j, j) = charMtrx2.at(j, j) / maxOmEl;
             }
         }
 #endif

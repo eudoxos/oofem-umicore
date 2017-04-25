@@ -96,6 +96,7 @@ InternalStateValueType giveInternalStateValueType(InternalStateType type)
     case IST_DeviatoricStrain:
     case IST_DeviatoricStress:
     case IST_CauchyStressTensor:
+    case IST_StrainTensorStressDependent:
         return ISVT_TENSOR_S3;
 
     case IST_BeamForceMomentumTensor:
@@ -126,6 +127,7 @@ InternalStateValueType giveInternalStateValueType(InternalStateType type)
     case IST_CrackDirs:
     case IST_CrackStatuses:
     case IST_CrackVector:
+    case IST_PrincipalStrainTensorStressDependent:
         return ISVT_VECTOR;
 
     case IST_MaxEquivalentStrainLevel:

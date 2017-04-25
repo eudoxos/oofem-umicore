@@ -1796,6 +1796,24 @@ StructuralMaterial :: giveIPValue(FloatArray &answer, GaussPoint *gp, InternalSt
     } else if ( type == IST_FirstPKStressTensor ) {
         answer = status->givePVector();
         return 1;
+    } else if ( type == IST_StrainTensorStressDependent ) {
+        ///@todo Fill in correct full form values here! This just adds zeros!
+		  FloatArray s;
+		  this->giveStressDependentPartOfStrainVector(s,gp,status->giveStrainVector(),tStep,VM_Total);
+        StructuralMaterial :: giveFullSymVectorForm( answer, s, gp->giveMaterialMode() );
+        if ( gp->giveMaterialMode() == _PlaneStress ) {
+            double Nxy = this->give(NYxy, gp);
+            double Nxz = this->give(NYxz, gp);
+            double Nyz = this->give(NYyz, gp);
+            double Nyx = Nxy * this->give(Ey, gp) / this->give(Ex, gp);
+            answer.at(3) = ( -( Nxz + Nxy * Nyz ) * answer.at(1) - ( Nyz + Nxz * Nyx ) * answer.at(2) ) / ( 1. - Nxy * Nyx );
+        }
+        return 1;
+    } else if ( type == IST_PrincipalStrainTensorStressDependent ) {
+        FloatArray s;
+		  this->giveStressDependentPartOfStrainVector(s,gp,status->giveStrainVector(),tStep,VM_Total);
+        this->computePrincipalValues(answer, s, principal_strain);
+        return 1;
     } else {
         return Material :: giveIPValue(answer, gp, type, tStep);
     }

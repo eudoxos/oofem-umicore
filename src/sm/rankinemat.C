@@ -169,6 +169,8 @@ RankineMat :: CreateStatus(GaussPoint *gp) const
 void
 RankineMat :: giveRealStressVector_1d(FloatArray &answer, GaussPoint *gp, const FloatArray &totalStrain, TimeStep *tStep)
 {
+	 FloatArray reducedTotalStrainVector;
+    this->giveStressDependentPartOfStrainVector(reducedTotalStrainVector, gp, totalStrain, tStep, VM_Total);
     FloatArray strainVector;
     FloatMatrix d;
     RankineMatStatus *status = static_cast< RankineMatStatus * >( this->giveStatus(gp) );
@@ -178,7 +180,7 @@ RankineMat :: giveRealStressVector_1d(FloatArray &answer, GaussPoint *gp, const 
     this->initGpForNewStep(gp);
 
     // elastoplasticity
-    this->performPlasticityReturn(gp, totalStrain);
+    this->performPlasticityReturn(gp, reducedTotalStrainVector);
 
     // damage
     double omega = computeDamage(gp, tStep);
@@ -202,6 +204,8 @@ RankineMat :: giveRealStressVector_PlaneStress(FloatArray &answer,
                                                const FloatArray &totalStrain,
                                                TimeStep *tStep)
 {
+	 FloatArray reducedTotalStrainVector;
+    this->giveStressDependentPartOfStrainVector(reducedTotalStrainVector, gp, totalStrain, tStep, VM_Total);
     RankineMatStatus *status = static_cast< RankineMatStatus * >( this->giveStatus(gp) );
 
     // initialization
@@ -209,7 +213,7 @@ RankineMat :: giveRealStressVector_PlaneStress(FloatArray &answer,
     this->initGpForNewStep(gp);
 
     // elastoplasticity
-    this->performPlasticityReturn(gp, totalStrain);
+    this->performPlasticityReturn(gp, reducedTotalStrainVector);
 
     // damage
     double omega = computeDamage(gp, tStep);

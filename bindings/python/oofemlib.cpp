@@ -699,7 +699,7 @@ void pyclass_Element()
         .add_property("length", &PyElement::computeLength)
         .def("giveLabel", &Element::giveLabel)
         .add_property("label",&Element::giveLabel)
-        .def("giveLocationArray", &PyElement::giveLocationArray)
+        //.def("giveLocationArray", &PyElement::giveLocationArray)
         .def("giveNumberOfDofManagers", &PyElement::giveNumberOfDofManagers)
         .add_property("numberOfDofManagers", &PyElement::giveNumberOfDofManagers)
         .def("computeNumberOfDofs", &PyElement::computeNumberOfDofs)
@@ -810,7 +810,7 @@ void pyclass_Load()
 {
     class_<PyLoad, bases<GeneralBoundaryCondition>, boost::noncopyable >("Load", no_init)
         .def("setComponentArray", &Load::setComponentArray)
-        .def("giveCopyOfComponentArray", &Load::giveCopyOfComponentArray)
+        .def("giveComponentArray", &Load::giveCopyOfComponentArray, return_value_policy<manage_new_object>())
         .def("computeValueAt", pure_virtual( &Load::computeValueAt))
         ;
 }
